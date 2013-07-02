@@ -1,0 +1,47 @@
+#! /bin/usr/python
+#Orignial: https://github.com/yassersouri/OpenCV-with-Python/blob/master/edge-detection/video-canny.py
+
+import cv
+
+def main():
+  #load video
+	capture = cv.CaptureFromFile('IMG_0706.MOV')
+	#create window
+	cv.NamedWindow("Canny Method", 1)
+	
+	#get height, with and transform inot integer 
+	d_height = cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_HEIGHT)
+	height = int(d_height)
+	d_width = cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH)
+	width = int(d_width)
+	
+	#intial frame
+	frame = 0
+	#convert colored frame into gray
+	gray = cv.CreateImage((width, height), 8, 1)
+	#An image, which will contain only edges
+	edges = cv.CreateImage((width, height), 8, 1)
+	#This variable will hold the code of the key pressed on the keyboard
+	key = 0
+	
+	while key != 27:
+		#get current frame
+		frame = cv.QueryFrame(capture)
+		#break after last frame
+		if frame == None:
+			break
+				
+		#convert frame to gray
+		cv.CvtColor(frame, gray, cv.CV_RGB2GRAY)
+		#implement canny method
+		cv.Canny(gray, edges, 120, 150)
+		#show video
+		cv.ShowImage("Canny Method", edges)
+		
+		key = cv.WaitKey(10)
+	
+	#destroy windows
+	cv.DestroyWindow("Canny Method")
+	
+if __name__ == '__main__':
+	main()
