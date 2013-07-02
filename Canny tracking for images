@@ -1,0 +1,35 @@
+#! usr/bin/python
+#edge detection using Canny method working on pictures
+
+import cv2
+import numpy as np
+
+def CannyMethod(start_Threshold):
+  #blur pic using Gaussian filter
+    edges = cv2.GaussianBlur(img_gray,(3,3),0)
+    #find edges in pic using canny algorithm
+    edges = cv2.Canny(edges,start_Threshold,start_Threshold*ratio,apertureSize = kernel_size)
+    #calculate the per-element bit-wise conjunction of two arrays
+    apc = cv2.bitwise_and(img,img,mask = edges) 
+    #display pic
+    cv2.imshow('Canny Method',apc)
+
+#settings for Threshold
+start_Threshold = 0
+max_Threshold = 100
+ratio = 3
+kernel_size = 3
+
+#read image and convert it into gray color
+img = cv2.imread('image.jpeg')
+img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
+#create Window, Trackbar and add pic
+cv2.namedWindow('Canny Method')
+cv2.createTrackbar('Threshold','Canny Method',start_Threshold, max_Threshold, CannyMethod)
+cv2.imwrite('canny.jpeg', img)
+
+#Calling Canny Method with starting Threshold of 50
+CannyMethod(50)
+if cv2.waitKey(0) == 10:
+	cv2.destroyAllWindows()
