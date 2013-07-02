@@ -1,0 +1,33 @@
+#! usr/bin/python
+#corner detection using Harris method working on pictures
+
+import cv
+
+#load pic
+image_color = cv.LoadImage('image.jpeg')
+#get gray pic
+image_gray = cv.LoadImage('image.jpeg',cv.CV_LOAD_IMAGE_GRAYSCALE)
+#create a matrix header and allocates the matrix data
+corner_matrix = cv.CreateMat(image_gray.height, image_gray.width, cv.CV_32FC1)
+
+#find corners in pic using harris algorithm
+cv.CornerHarris(image_gray,corner_matrix,3)
+for y in range(0, image_gray.height):
+ for x in range(0, image_gray.width):
+  #return a specific array element x,y
+  harris = cv.Get2D(corner_matrix, y, x) 
+  #checking responce of corner detection
+  if harris[0] > 10e-06:
+   #draw corner-point on pic
+   cv.Circle(image_color,(x,y),2,cv.RGB(155, 0, 25))
+
+#create window
+cv.NamedWindow('Harris Method', cv.CV_WINDOW_AUTOSIZE)
+#show image
+cv.ShowImage('Harris Method', image_color) 
+#save image
+cv.SaveImage('harris.jpg', image_color)
+
+#destroys all windows when finished
+if cv.WaitKey(0) == 10:
+  cv.DestroyAllWindows()
