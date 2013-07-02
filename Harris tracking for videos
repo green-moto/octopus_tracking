@@ -1,0 +1,48 @@
+#! /bin/usr/python
+
+import cv
+import Image
+
+def main():
+  
+	#open video
+	capture = cv.CaptureFromFile('IMG_0706.MOV')
+	#create window
+	cv.NamedWindow("Harris Method", 1)
+	
+	frame = 0
+	key = 0
+	
+	while key != 27:
+		#get current frame
+		frame = cv.QueryFrame(capture)
+		#create grayscale frame
+		image_gray = cv.CreateImage((frame.width, frame.height), 8, 1)
+		
+		#implement Harris
+		#create a matrix header and allocates the matrix data
+		corner_matrix = cv.CreateMat(image_gray.height, image_gray.width, cv.CV_32FC1)
+		#find corners in pic using harris algorithm
+		cv.CornerHarris(image_gray,corner_matrix,3)
+		for y in range(0, image_gray.height):
+			for x in range(0, image_gray.width):
+				#return a specific array element x,y
+				harris = cv.Get2D(corner_matrix, y, x) 
+				#checking responce of corner detection
+				if harris[0] > 10e-06:
+					#draw corner-point on pic
+					cv.Circle(frame,(x,y),2,cv.RGB(155, 0, 25))
+		
+		#stop after last frame
+		if frame == None:
+			break
+		
+		#show the new video
+		cv.ShowImage("Harris_Method", frame)
+		key = cv.WaitKey(10)
+	
+	#destroy window
+	cv.DestroyWindow("Harris_Method")
+	
+if __name__ == '__main__':
+	main()
